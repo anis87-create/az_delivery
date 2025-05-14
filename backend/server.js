@@ -3,9 +3,11 @@ const express= require('express');
 const itemRoutes = require('./routes/items');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
+const colors = require('colors');
 const app = express();
 const port = process.env.PORT || 5000;
-
+const connectDB = require('./config/db');
+connectDB();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cors());
