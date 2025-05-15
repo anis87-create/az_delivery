@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const MenuItemSchema = mongoose.Schema({
    name: {
     type: String,
-    required: [true, 'please add a name']
+    required: true
    },
    description: {
     type: String
@@ -16,6 +16,14 @@ const MenuItemSchema = mongoose.Schema({
     type: String,
    },
    isAvailable: {
+    type: Boolean,
+   },
+   category: {
+    type: String,
+    enum: ['appetizer', 'dessert', 'main course', 'beverage'],
+    required: true
+   },
+   isPopular:{
     type: Boolean,
    }
 }, {
