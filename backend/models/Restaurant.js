@@ -7,8 +7,9 @@ const RestaurantSchema = mongoose.Schema({
         required: true
     },
     owner: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
+        //type:mongoose.Schema.Types.ObjectId,
+        //ref:'User',
+        type: String,
         required:true
     },
     location: {
@@ -26,7 +27,19 @@ const RestaurantSchema = mongoose.Schema({
     phone:{
         type: String,
         required: true
-    }
+    },
+    isBanned: {
+        type: Boolean,
+        default: false
+    },
+    isActivated: {
+        type: Boolean,
+        default: false
+    },
+    openDays: {
+        type: [String],
+        required: true
+    },
 },{
     timestamps: true
 });
