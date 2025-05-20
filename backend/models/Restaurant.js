@@ -24,10 +24,6 @@ const RestaurantSchema = mongoose.Schema({
         type: String,
         default: 'https://kzmnz3h916wfojwvmv0a.lite.vusercontent.net/placeholder.svg?height=300&width=800'
     },
-    phone:{
-        type: String,
-        required: true
-    },
     isBanned: {
         type: Boolean,
         default: false

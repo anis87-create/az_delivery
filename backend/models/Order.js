@@ -23,7 +23,10 @@ const OrderSchema = new mongoose.Schema({
         type: String
     },
     orderItems: {
-        type: [OrderItem]
+        type: [{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'OrderItem'
+        }]
     }
 },{
     timestamps: true

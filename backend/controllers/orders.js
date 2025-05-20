@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const Order = require('../models/Order');
 
-const getOrders = asyncHandler(async (req, res) => {
+const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({restaurantId: req.params.id}).populate('orderItems.item').populate('userId');
     if(!orders){
         res.status(404)
@@ -12,7 +12,7 @@ const getOrders = asyncHandler(async (req, res) => {
 });
 
 const getOrderByUserId = asyncHandler(async (req, res) => {
-    const order = await Order.findOne({restaurantId: req.params.id, userId: req.user.id}).populate('orderItems.item').populate('userId');
+    const order = await Order.findOne({userId: req.user.id}).populate('orderItems.item').populate('userId');
     if(!order){
         res.status(404)
         throw new Error('No order found');
@@ -43,7 +43,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     res.status(200).json(order);
 });
 const searchOrderByName = asyncHandler(async(req, res) => {
-    const orders = await Order.find({name: req.body.name}).populate('orderItems.item').populate('userId');
+    const orders = await Order.find({name: req.query.name}).populate('orderItems.item').populate('userId');
     const filteredOrders = orders.filter(order => order.name.toLowerCase().includes(req.body.name.toLowerCase()));
     if(filteredOrders.length === 0){
         res.status(404)
@@ -63,7 +63,7 @@ const deleteOrder = asyncHandler(asyncHandler(async (req, res) => {
 }))
 
 module.exports= {
-    getOrders,
+    getAllOrders,
     getOrderByUserId,
     searchOrderByName,
     getOrderByRestaurantId,
