@@ -3,15 +3,19 @@ const { userRegisterValidator, userLoginValidator } = require('../middlewares/va
 const protect = require('../middlewares/authMiddleware');
 
 const router = require('express').Router();
-
-router.post('/login',userLoginValidator(), loginUser);
+router.post('/login', userLoginValidator(), loginUser);
 
 router.post('/register', userRegisterValidator(), registerUser);
 
-router.route('/:id').put(userRegisterValidator(), protect, updateUser).delete(deleteUser);
+// ✅ PLACE CETTE ROUTE EN PREMIER AVANT /:id
+router.get('/me', protect, getCurrentUser); 
 
-router.get('/:id', deleteUser);
+router.route('/:id')
+  .put(userRegisterValidator(), protect, updateUser)
+  .delete(protect, deleteUser);
+
+router.get('/:id', protect, deleteUser); // (PS: probablement une erreur ici, c’est pas getOneUser ?)
 
 router.get('/', getAllUsers);
-router.get('/me',protect, getCurrentUser);
+
 module.exports = router;

@@ -42,7 +42,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
          phoneNumber: user.phoneNumber,
          location: user.location,
          role: user.role,
-         token: generatToken(user._id),
+         token: generateToken(user._id),
       })
    } else{
       res.status(400)
@@ -68,7 +68,7 @@ const updateUser = asyncHandler(async (req, res, next) => {
 
 
 const deleteUser =  asyncHandler(async (req, res, next) => {
-   const user = await User.findById(req.user.id);
+   const user = await User.findById(req.params.id);
     if(!user){
      return res.status(400).json({msg:'user not found'});
    }
@@ -82,19 +82,20 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id); 
+   if (!user) {
+     return res.status(404).json({ message: "Utilisateur non trouvé" });
+   }
 
-   const user = await User.findById(req.user.id);
    res.status(200).json({
-     id: user.id,
+     _id: user.id,
      fullName: user.fullName,
      email: user.email
-   })
+   });
 });
 
-const generatToken = (user) => {
-   return jwt.sign({_id: user.id}, process.env.JWT_SECRET, {
-      expiresIn: '30d'
-   });
+const generateToken = (id) => {
+   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 module.exports = {

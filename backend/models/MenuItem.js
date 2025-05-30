@@ -25,6 +25,10 @@ const MenuItemSchema = mongoose.Schema({
    },
    isPopular:{
     type: Boolean,
+   },
+   restaurantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Restaurant'
    }
 }, {
     timestamps: true

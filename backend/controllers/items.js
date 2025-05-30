@@ -7,7 +7,9 @@ const getItems = asyncHandler(async(req, res) => {
 });
 
 const addItem = asyncHandler(async(req, res) => {
-   const errors = validationResult(req).array();
+   const errors = validationResult(req);
+
+   
    if(!errors.isEmpty()){
     return res.status(400).json({errors: errors.array().map(error => ({
         msg: error.msg,

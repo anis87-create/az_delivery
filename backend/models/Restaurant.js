@@ -7,14 +7,8 @@ const RestaurantSchema = mongoose.Schema({
         required: true
     },
     owner: {
-        //type:mongoose.Schema.Types.ObjectId,
-        //ref:'User',
-        type: String,
-        required:true
-    },
-    location: {
-        type: String, 
-        required: true
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     },
     rate:{
         type:Number,
@@ -36,6 +30,10 @@ const RestaurantSchema = mongoose.Schema({
         type: [String],
         required: true
     },
+    items: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'MenuItem'
+    }
 },{
     timestamps: true
 });

@@ -6,7 +6,6 @@ const menuItemValidator= (req, res, next) => {
         body('category').notEmpty().withMessage('the category is required')
     ];
     return errors;
-
 }
 
 const restaurantValidator = (req, res, next) => {
@@ -33,8 +32,8 @@ const userRegisterValidator = (req, res, next) => {
         .withMessage("the password must contain al least 6 characters"),
 
        body('phoneNumber')
-       .matches(/^\d{6}$/)
-        .withMessage("the password must contain al least 6 characters")
+       .matches(/^\d{8}$/)
+        .withMessage("the password must contain 8 numbers")
       ];
 
     return errors;

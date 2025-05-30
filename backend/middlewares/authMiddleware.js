@@ -2,23 +2,36 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const protect = asyncHandler(async(req, res, next) => {
-   let token;
-   try {
-      if(req.headers.Authorization && req.headers.Authorization.startsWith('Bearer')){
-      token = req.headers.Authorization.split(' ')[1];
-      const decoded = jwt.verify(process.env.JWT_SECRET, token);
-      const user = await User.findById(decoded.id).select('-password');
-      req.user = user;
+const protect = async (req, res, next) => {
+  let token;
+
+  // Récupération du token dans les headers
+  const authHeader = req.headers.authorization;  
+  if (authHeader && authHeader.startsWith('Bearer')) {
+    console.log('yes');
+    
+    try {
+      token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findById(decoded.id).select('-password');
+
+            
+      if (!req.user) {
+        return res.status(401).json({ msg: 'Utilisateur non trouvé' });
+      }
+
       next();
-    }else {
-      res.status(400)
-      throw new Error('token not valid');    
+    } catch (error) {
+      console.log(error);
+      
+      return res.status(401).json({ msg: 'Token invalide' });
     }
-   } catch (error) {
-       res.status(401).json({ msg: 'Non autorisé, aucun token' });
-   }
-});
+  } else {
+    return res.status(401).json({ msg: 'Non autorisé, aucun token' });
+  }
+};
+
 
 
 module.exports = protect;

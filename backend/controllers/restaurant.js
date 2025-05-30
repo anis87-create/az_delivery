@@ -1,12 +1,21 @@
 const Restaurant = require('../models/Restaurant');
 const asyncHandler = require('express-async-handler');
 const {validationResult} = require('express-validator');
+const User = require('../models/User');
 const getAllRestaurants =  asyncHandler(async (req, res, next) => {
-     const restaurants = await Restaurant.find();
+     const restaurants = await Restaurant.find().populate('owner').populate('items');
+     
+     if(restaurants.length === 0){
+        res.status(400)
+        throw new Error('restaurants not found');
+     }
      res.status(200).json(restaurants);
 });
 
+
+
 const addRestaurant = asyncHandler(async (req, res, next) => {
+    const {fullName, email, password, phone, location, name} = req.body;
     let restaurant = await Restaurant.findOne({name: req.body.name});
     if(restaurant){
         return res.status(400).json({msg:'the restaurant already exist'});
@@ -19,8 +28,21 @@ const addRestaurant = asyncHandler(async (req, res, next) => {
             location: error.location
         }))});
     }
+    const user = new User({
+        fullName,
+        email,
+        password,
+        phone,
+        location,
+        role:'restaurant_owner'
+    });
+    user.save();
     restaurant = new Restaurant({
-        ...req.body
+        name,
+        owner: user._id,
+        rate: 4,
+        imageUrl: '',
+        openDays: ['Mon','Thi','Wen','Thu','Fri','Sat',]
     });
 
     await restaurant.save();
@@ -61,7 +83,7 @@ const activeRestaurant = asyncHandler(async (req, res, next) => {
         isActivated: true
     });
    
-    res.status(200).json({ msg: "Restaurant banned successfully" });
+    res.status(200).json({ msg: "Restaurant activated successfully" });
 });
 const getRestaurantByOwner = asyncHandler(async (req, res, next)  => {
     const ownerId = req.user.id;
