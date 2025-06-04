@@ -14,8 +14,6 @@ router.route('/:id')
   .put(userRegisterValidator(), protect, updateUser)
   .delete(protect, deleteUser);
 
-router.get('/:id', protect, deleteUser); // (PS: probablement une erreur ici, c’est pas getOneUser ?)
-
 router.get('/', getAllUsers);
 
 module.exports = router;

@@ -1,6 +1,25 @@
 const asyncHandler = require("express-async-handler")
 const Order = require('../models/Order');
 
+
+const createOrder = asyncHandler(async (req, res) => {
+    const {orderItems, totalPrice,  restaurantId, paymentMethod} = req.body;
+
+    if(!orderItems || orderItems.length === 0){
+        res.status(400);
+        throw new Error('No order items provided');
+    }
+
+    const order = await Order.create({
+        orderItems,
+        totalPrice,
+        userId: req.user.id,
+        restaurantId,
+        paymentMethod
+    });
+
+    res.status(201).json(order);
+} )
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({restaurantId: req.params.id}).populate('orderItems.item').populate('userId');
     if(!orders){
@@ -37,9 +56,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error('No order found');
     }
-    order.updateOne(req.params.id, {
-        status: req.body.status
-    });
+    order.status = req.body.status || order.status;
+    await order.save();
     res.status(200).json(order);
 });
 const searchOrderByName = asyncHandler(async(req, res) => {
@@ -63,6 +81,7 @@ const deleteOrder = asyncHandler(asyncHandler(async (req, res) => {
 }))
 
 module.exports= {
+    createOrder,
     getAllOrders,
     getOrderByUserId,
     searchOrderByName,

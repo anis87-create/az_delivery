@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const OrderItem = require('./OrderItem');
+
 
 
 const OrderSchema = new mongoose.Schema({
@@ -17,17 +17,28 @@ const OrderSchema = new mongoose.Schema({
     },
     totalPrice: {
         type: Number,
+        required: true,
+        default: 0.0
     },
     status: {
-        enum: ['new','preparing','ready','completed'],
-        type: String
+        enum: ['new','pending','ready','completed'],
+        type: String,
+        default:'pending'
     },
-    orderItems: {
-        type: [{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'OrderItem'
-        }]
-    }
+    orderItems: [
+    {
+        item: { type: mongoose.Schema.Types.ObjectId, ref:'MenuItem',required: true },
+        price: {
+        type: Number,
+        },
+        quantity: { type: Number ,required:true }
+    },
+  ],
+  paymentMethod: {
+        enum: ['card','cash'],
+        type: String,
+        required: true
+ }
 },{
     timestamps: true
 });

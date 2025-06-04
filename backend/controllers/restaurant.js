@@ -13,9 +13,20 @@ const getAllRestaurants =  asyncHandler(async (req, res, next) => {
 });
 
 
+const getRestaurantById = asyncHandler(async (req, res, next) => {
+    const {id} = req.params;
+    const restaurant = await Restaurant.findById(id);
+    if(!restaurant){
+        res.status(200)
+        throw new Error('restaurant not found')
+    }
+    res.status(200).json(restaurant);
+});
+
+
 
 const addRestaurant = asyncHandler(async (req, res, next) => {
-    const {fullName, email, password, phone, location, name} = req.body;
+    const {fullName, email, password, phone, location, name, openDays} = req.body;
     let restaurant = await Restaurant.findOne({name: req.body.name});
     if(restaurant){
         return res.status(400).json({msg:'the restaurant already exist'});
@@ -28,21 +39,27 @@ const addRestaurant = asyncHandler(async (req, res, next) => {
             location: error.location
         }))});
     }
-    const user = new User({
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    let user = await User.findOne({email});
+    if(user){
+         return res.status(400).json({msg:'the user already exist'});
+    }
+    user = new User({
         fullName,
         email,
-        password,
+        password: hashedPassword,
         phone,
         location,
         role:'restaurant_owner'
     });
-    user.save();
+    await user.save();
     restaurant = new Restaurant({
         name,
         owner: user._id,
         rate: 4,
         imageUrl: '',
-        openDays: ['Mon','Thi','Wen','Thu','Fri','Sat',]
+        openDays: openDays || ['Mon','Tue','Wed','Thu','Fri','Sat']
     });
 
     await restaurant.save();
@@ -97,6 +114,7 @@ const getRestaurantByOwner = asyncHandler(async (req, res, next)  => {
 module.exports = {
     addRestaurant,
     getAllRestaurants,
+    getRestaurantById,
     updateRestaurant,
     banRestaurant,
     activeRestaurant,

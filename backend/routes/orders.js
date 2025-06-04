@@ -1,14 +1,17 @@
-const { getAllOrders, getOrderByUserId, getOrderByRestaurantId, updateOrderStatus, deleteOrder, searchOrderByName } = require('../controllers/orders');
+const { getAllOrders, getOrderByUserId, getOrderByRestaurantId, updateOrderStatus, deleteOrder, searchOrderByName, createOrder } = require('../controllers/orders');
+const protect = require('../middlewares/authMiddleware');
+const authorizeRoles = require('../middlewares/authorizeRoles');
 
 const router = require('express').Router();
 
 
-router.get('/', getAllOrders);
-router.get('/user', getOrderByUserId);
-router.get('/:id', getOrderByRestaurantId);
-router.put('/:id',updateOrderStatus);
-router.delete('/:id', deleteOrder);
-router.get('/search', searchOrderByName);
+router.get('/',protect, authorizeRoles(['admin', 'restaurant_owner']), getAllOrders);
+router.get('/user',protect, getOrderByUserId);
+router.get('/:id',protect,  getOrderByRestaurantId);
+router.put('/:id',protect, updateOrderStatus);
+router.delete('/:id',protect, deleteOrder);
+router.get('/search', protect, searchOrderByName);
+router.post('/',authorizeRoles('customizer'), createOrder)
 
 
 module.exports = router;

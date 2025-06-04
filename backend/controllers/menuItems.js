@@ -2,14 +2,12 @@ const asyncHandler = require('express-async-handler');
 const MenuItem = require('../models/MenuItem');
 const {validationResult} = require('express-validator');
 const getItems = asyncHandler(async(req, res) => {
-    const items = await MenuItem.find();
+    const items = await MenuItem.find({restaurantId: req.params.id});
     res.status(200).json(items);
 });
 
 const addItem = asyncHandler(async(req, res) => {
    const errors = validationResult(req);
-
-   
    if(!errors.isEmpty()){
     return res.status(400).json({errors: errors.array().map(error => ({
         msg: error.msg,
@@ -18,6 +16,7 @@ const addItem = asyncHandler(async(req, res) => {
      }))});
    }
     const item = new MenuItem({
+        restaurantId: req.user.id,
         ...req.body
     });
     await item.save();
@@ -45,6 +44,7 @@ const deleteItem = asyncHandler(async (req, res) => {
      await MenuItem.deleteOne({_id: item.id}); 
      res.status(200).json({msg:`item ${req.params.id} deleted`});
 });
+
 
 module.exports = {
     getItems,

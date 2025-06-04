@@ -1,4 +1,4 @@
-const { getAllRestaurants, addRestaurant, updateRestaurant, getRestaurantByOwner, banRestaurant, activeRestaurant } = require('../controllers/restaurant');
+const { getAllRestaurants, addRestaurant, updateRestaurant, getRestaurantByOwner, banRestaurant, activeRestaurant, getRestaurantById } = require('../controllers/restaurant');
 const {restaurantValidator} = require('../middlewares/validators');
 const protect = require('../middlewares/authMiddleware');
 const  authorizeRoles  = require('../middlewares/authorizeRoles');
@@ -8,6 +8,7 @@ const router= require('express').Router();
   get(getAllRestaurants).
   post(restaurantValidator(),  addRestaurant);
   router.route('/:id')
+  .get(getRestaurantById)
   .get(
     protect,
     authorizeRoles('restaurant_owner'),
