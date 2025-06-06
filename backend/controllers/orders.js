@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler")
 const Order = require('../models/Order');
+const Restaurant = require("../models/Restaurant");
 
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -30,8 +31,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
     res.status(200).json(orders);
 });
 
-const getOrderByUserId = asyncHandler(async (req, res) => {
-    const order = await Order.findOne({userId: req.user.id}).populate('orderItems.item').populate('userId');
+const getOrdersByUserId = asyncHandler(async (req, res) => {
+    const order = await Order.find({userId: req.user.id}).populate('orderItems.item').populate('userId');
     if(!order){
         res.status(404)
         throw new Error('No order found');
@@ -40,8 +41,12 @@ const getOrderByUserId = asyncHandler(async (req, res) => {
     res.status(200).json(order);
 });
 
-const getOrderByRestaurantId = asyncHandler(async (req, res) => {
-    const order = await Order.findOne({restaurantId: req.params.id}).populate('orderItems.item').populate('userId');
+const getOrdersByRestaurantId = asyncHandler(async (req, res) => {
+    const restaurant = await Restaurant.findOne({owner: req.user._id});
+    if(!restaurant){
+        return res.status(404).json({ msg: 'Restaurant not found' });
+    }
+    const order = await Order.find({restaurantId: restaurant.id}).populate('orderItems.item').populate('userId');
     if(!order){
         res.status(404)
         throw new Error('No order found');
@@ -76,16 +81,16 @@ const deleteOrder = asyncHandler(asyncHandler(async (req, res) => {
         throw new Error('No order found');
     }
 
-   await Order.deleteOne({id: req.params.id});
+   await Order.deleteOne({_id: req.params.id});
    res.status(200).json({msg:'Order deleted'});
 }))
 
 module.exports= {
     createOrder,
     getAllOrders,
-    getOrderByUserId,
+    getOrdersByUserId,
     searchOrderByName,
-    getOrderByRestaurantId,
+    getOrdersByRestaurantId,
     updateOrderStatus,
     deleteOrder
 }

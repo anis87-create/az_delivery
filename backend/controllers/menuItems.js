@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const MenuItem = require('../models/MenuItem');
 const {validationResult} = require('express-validator');
+const Restaurant = require('../models/Restaurant');
 const getItems = asyncHandler(async(req, res) => {
     const items = await MenuItem.find({restaurantId: req.params.id});
     res.status(200).json(items);
@@ -15,8 +16,10 @@ const addItem = asyncHandler(async(req, res) => {
         location: error.location
      }))});
    }
+   const restaurant = await Restaurant.findOne({ owner: req.user.id });
+   if(!restaurant) return res.status(404).json({ msg: 'Restaurant not found' });
     const item = new MenuItem({
-        restaurantId: req.user.id,
+        restaurantId: restaurant._id,
         ...req.body
     });
     await item.save();

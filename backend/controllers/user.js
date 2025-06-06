@@ -55,8 +55,6 @@ const updateUser = asyncHandler(async (req, res, next) => {
    const user = await User.findById(req.user.id);
    const {fullName, phone, location, email} = req.body;
    if(!user){
-      console.log('not found');
-      
      return res.status(400).json({msg:'user not found'});
    }
    await User.updateOne({_id: req.user.id}, {
