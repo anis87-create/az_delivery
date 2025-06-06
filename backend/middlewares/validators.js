@@ -29,11 +29,11 @@ const userRegisterValidator = (req, res, next) => {
           .withMessage('the password must contain a least a capital letter'),
         body('location')
         .isLength({min: 6, max: 100})
-        .withMessage("the password must contain al least 6 characters"),
+        .withMessage("the location must contain al least 6 characters"),
 
-       body('phoneNumber')
+       body('phone')
        .matches(/^\d{8}$/)
-        .withMessage("the password must contain 8 numbers")
+        .withMessage("the phone must contain 8 numbers")
       ];
 
     return errors;

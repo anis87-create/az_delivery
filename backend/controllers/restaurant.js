@@ -2,6 +2,7 @@ const Restaurant = require('../models/Restaurant');
 const asyncHandler = require('express-async-handler');
 const {validationResult} = require('express-validator');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const getAllRestaurants =  asyncHandler(async (req, res, next) => {
      const restaurants = await Restaurant.find().populate('owner').populate('items');
      
@@ -58,7 +59,7 @@ const addRestaurant = asyncHandler(async (req, res, next) => {
         name,
         owner: user._id,
         rate: 4,
-        imageUrl: '',
+        image: '',
         openDays: openDays || ['Mon','Tue','Wed','Thu','Fri','Sat']
     });
 
@@ -74,7 +75,8 @@ const updateRestaurant = asyncHandler(async (req, res, next) => {
         return res.status(400).json({msg:'the restaurant does not exist'});
     }
     await Restaurant.updateOne({_id: restaurant.id}, {
-        ...req.body
+        ...req.body,
+        image: req.file.path
     });
     res.status(200).json({msg:`restaurant ${req.params.id} updated`});
 });

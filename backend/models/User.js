@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
     required: true
    },
    phone: {
-    type: String,
+    type: Number,
     required: true
    },
    location: {
@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['customizer','restaurant_owner','delivery','admin'],
     default: 'customizer'
+   },
+   profileImage: {
+    type: String,
+    default:''
    }
 },{
   timestamps: true

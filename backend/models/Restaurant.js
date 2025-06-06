@@ -14,7 +14,7 @@ const RestaurantSchema = mongoose.Schema({
         type:Number,
         default: 0
     },
-    imageUrl:{
+    image:{
         type: String,
         default: 'https://kzmnz3h916wfojwvmv0a.lite.vusercontent.net/placeholder.svg?height=300&width=800'
     },
@@ -31,7 +31,7 @@ const RestaurantSchema = mongoose.Schema({
         required: true
     },
     items: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref:'MenuItem'
     }
 },{

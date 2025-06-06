@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const {validationResult} = require('express-validator');
 
 const registerUser = asyncHandler(async (req, res, next) => {
-   const { fullName, email, password, phoneNumber, location } = req.body;
+   const { fullName, email, password, phone, location } = req.body;
    let user = await User.findOne({email});
    const errors = validationResult(req);
    
@@ -15,14 +15,14 @@ const registerUser = asyncHandler(async (req, res, next) => {
    
    const salt = await  bcrypt.genSalt(10);
    const hashedPassword = await bcrypt.hash(password, salt);
-   user = new User({ fullName,email, password: hashedPassword, phoneNumber, location
+   user = new User({ fullName,email, password: hashedPassword, phone, location
    });
 
    user.save();
    res.status(200).json({msg: 'Register User', user: {
       fullName: user.fullName,
       email: user.email,
-      phoneNumber: user.phoneNumber,
+      phone: user.phon,
       location: user.location
    }})
 });
@@ -53,16 +53,22 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
 const updateUser = asyncHandler(async (req, res, next) => {
    const user = await User.findById(req.user.id);
-   const {fullName, phoneNumber, location, email} = req.body;
+   const {fullName, phone, location, email} = req.body;
    if(!user){
+      console.log('not found');
+      
      return res.status(400).json({msg:'user not found'});
    }
    await User.updateOne({_id: req.user.id}, {
       fullName,
-      phoneNumber,
+      phone,
       location,
-      email
+      email,
+      profileImage: req.file.path
    });
+
+   console.log('file ===>',req.file);
+   
    res.status(200).json({msg:'user updated'});
 });
 

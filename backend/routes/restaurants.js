@@ -2,6 +2,7 @@ const { getAllRestaurants, addRestaurant, updateRestaurant, getRestaurantByOwner
 const {restaurantValidator} = require('../middlewares/validators');
 const protect = require('../middlewares/authMiddleware');
 const  authorizeRoles  = require('../middlewares/authorizeRoles');
+const upload = require('../middlewares/upload');
 const router= require('express').Router();
 
   router.route('/').
@@ -18,6 +19,7 @@ const router= require('express').Router();
     protect,
     authorizeRoles('restaurant_owner'),
     restaurantValidator(),
+    upload.single('image'),
     updateRestaurant
   );
 router.put('/ban/:id',protect,authorizeRoles('admin'),  banRestaurant);
