@@ -19,12 +19,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
    });
 
    user.save();
-   res.status(200).json({msg: 'Register User', user: {
-      fullName: user.fullName,
-      email: user.email,
-      phone: user.phon,
-      location: user.location
-   }})
+   res.status(200).json(user)
 });
 
 const loginUser = asyncHandler(async (req, res, next) => {
