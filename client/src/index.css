@@ -1,6 +1,12 @@
-body {
+
+* {
   margin: 0;
   bottom: 0;
   box-sizing: border-box;
 }
 
+ .container {
+
+  width: 90%;
+ margin: auto;
+}

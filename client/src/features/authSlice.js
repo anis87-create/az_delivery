@@ -1,14 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from '../services/userService';
 const initialState= {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     loading: false,
     errors: [],
-    token: null
+    token: localStorage.getItem('token') || null
 }
-export const register = createAsyncThunk('auth/register', async (user) => {
-   return await userService.register(user);
-})
+export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
+   return await userService.register(user, thunkAPI);
+});
+
+export const login = createAsyncThunk('auth/login', async(user, thunkAPI) => {
+    return await userService.login(user, thunkAPI);
+});
 const authSlice = createSlice({
     name:'auth',
     initialState,
@@ -32,7 +36,24 @@ const authSlice = createSlice({
          state.loading = false;
          state.errors = action.payload;
          state.user = null;
-       });
+       })
+       .addCase(login.pending, (state, action)=> {
+         state.loading = true;
+         state.errors = [];
+       })
+       .addCase(login.fulfilled, (state, action)=> {
+         state.loading = false;
+         state.errors = [];
+         state.user = action.payload;
+         state.token = action.payload.token;
+       })
+       .addCase(login.rejected, (state, action)=> {
+         state.loading = false;
+         state.errors = action.payload;
+         state.user = null;
+         state.token = null;
+       })
+       ;
     }
 });
 
