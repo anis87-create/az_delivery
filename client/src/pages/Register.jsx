@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdOutlineEmail } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { PiPhone } from 'react-icons/pi';
@@ -7,7 +7,13 @@ import { FaFacebookF } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc" 
 import { IoEyeOutline } from "react-icons/io5";
+import { GrRestaurant } from "react-icons/gr";
+import { IoRestaurantOutline } from "react-icons/io5";
+import { PiAddressBookThin } from "react-icons/pi";
+
 const Register = () => {
+  const [accountType, setAccountType]= useState('');
+  
   return (
     <main className='flex-1 container px-4 py-8 text-center mx-auto'>
       <div className='max-w-md container mx-auto'>
@@ -28,13 +34,59 @@ const Register = () => {
           </div>
           {/* Account Type select */}
           <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
-            <select id="accountType" name="accountType" required className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none ml-0 pl-3">
-              <option value="">Select Account Type</option>
+            <select 
+           
+            id="accountType" name="accountType" required className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none ml-0 pl-3"
+            onChange={(e) => {
+              setAccountType(e.target.value)
+            }}
+            >
+              <option value="" hidden>Select Account Type</option>
               <option value="customizer">Customizer</option>
               <option value="restaurant">Restaurant Owner</option>
               <option value="delivery">Delivery Person</option>
             </select>
-          </div>
+            </div>
+            {accountType === 'customizer' && <>
+              <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
+                <PiAddressBookThin size={20} color="#9ca3af" />
+                <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none pr-2 ml-0 pl-3" placeholder="Address" required style={{ borderColor: '#eee' }} />
+                </div>
+            </>}
+
+            {accountType === 'restaurant' && 
+            <>
+              <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
+                <GrRestaurant size={20} color="#9ca3af" />
+                <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none pr-2 ml-0 pl-3" placeholder="Restaurant Name" required style={{ borderColor: '#eee' }} />
+                </div>
+                <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
+                <IoRestaurantOutline size={20} color="#9ca3af" />
+                <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none pr-2 ml-0 pl-3" placeholder="Restaurant Address" required style={{ borderColor: '#eee' }} />
+              </div>
+            </>
+            }
+
+            {accountType === 'delivery' && 
+            <>
+              <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
+              <select 
+                id="vehicleType" 
+                name="vehicleType" 
+                required 
+                className="form-select flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none ml-0 pl-3" 
+                style={{ borderColor: '#eee' }}
+                onChange={(e) => { }}
+            >
+              <option value="" hidden>Select Vehicle Type</option>
+              <option value="bycycle">Bycycle</option>
+              <option value="car">Car</option>
+              <option value="scooter">Scooter</option>
+            </select>
+            </div>
+            </>
+          }
+          {/* Removed invalid MUI Select components to fix dispatcher is null error */}
           {/* Confirm Password input styled like password input */}
           <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
             <TbLockPassword size={20} color="#9ca3af" />
@@ -50,6 +102,7 @@ const Register = () => {
               <IoEyeOutline size={20} color="#9ca3af"/>
             </button>
           </div>
+         
           <div className="w-full max-w-md flex justify-start">
             <p className="text-xs text-gray-500">
               By signing up, you agree to our <a href="/terms" className="text-orange-500 hover:text-orange-600">Terms of Service</a> and <a href="/privacy" className="text-orange-500 hover:text-orange-600">Privacy Policy</a>.
