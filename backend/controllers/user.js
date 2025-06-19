@@ -29,6 +29,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
    if(!errors.isEmpty()){
        return res.status(400).json({errors: errors.array()});
    }
+
+
    
    if(user && await bcrypt.compare(password, user.password)){ 
       res.status(200).json({
@@ -60,8 +62,7 @@ const updateUser = asyncHandler(async (req, res, next) => {
       profileImage: req.file.path
    });
 
-   console.log('file ===>',req.file);
-   
+
    res.status(200).json({msg:'user updated'});
 });
 

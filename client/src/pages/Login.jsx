@@ -1,25 +1,66 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaRegUser } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { IoEyeOutline } from "react-icons/io5";
 import {Link, useNavigate} from 'react-router-dom';
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc" 
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout } from '../features/authSlice';
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {errors} = useSelector(state => state.auth);
+
+  useEffect(() => {
+    dispatch(logout());
+  }, []);
+  
+  const [form, setForm] = useState({
+    email:'',
+    password:''
+  });
+
+  
+
+  const handleChange = (e) => {
+       const {name, value} = e.target;
+       setForm((values) =>({
+        ...values,
+        [name]: value
+       }));
+  }
+  const handleSubmit = (e) => {
+     e.preventDefault();
+     dispatch(login(form));
+    console.log(errors);
+    
+     navigate('/');
+  }
   return (
     <main className='flex-1 container px-4 py-8 text-center mx-auto'>
       <div className='max-w-md container mx-auto'>
       <h1 className='font-bold text-2xl mb-2'>Welcome to FoodDelivery</h1>
       <p className='text-gray-500 mb-12 p-4'>Sign to continue</p>
-      <form className="flex flex-col gap-4 items-center">
+      <form className="flex flex-col gap-4 items-center"
+      onSubmit={handleSubmit}
+      >
         <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
           <FaRegUser size={20} color="#9ca3af"/>
-          <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none ml-0 pl-3" placeholder="Email" required type="email" style={{ borderColor: '#eee' }} />
+          <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none ml-0 pl-3" placeholder="Email" required 
+            type="email" 
+            name='email'  
+            onChange={handleChange}
+            value={form.email}
+            style={{ borderColor: '#eee' }} />
         </div>
         <div className="flex items-center w-full max-w-md border border-input rounded-md bg-background px-3 py-2" style={{ borderColor: '#eee' }}>
           <TbLockPassword size={20} color="#9ca3af"/>
-          <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none pr-2 ml-0 pl-3" placeholder="Password" required type="password" style={{ borderColor: '#eee' }} />
+          <input className="flex-1 h-10 bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none pr-2 ml-0 pl-3" placeholder="Password" required type="password" 
+             name='password' 
+             onChange={handleChange}
+             value={form.password}
+             style={{ borderColor: '#eee' }} />
           <button className="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-accent hover:text-accent-foreground h-8 w-8 ml-2" type="button">
             <IoEyeOutline size={20} color="#9ca3af"/>
           </button>

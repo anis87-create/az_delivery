@@ -28,19 +28,24 @@ const userRegisterValidator = (req, res, next) => {
           .matches(/[A-Z]/)
           .withMessage('the password must contain a least a capital letter'),
         body('location')
+        .notEmpty().withMessage('location is required')
         .isLength({min: 6, max: 100})
         .withMessage("the location must contain al least 6 characters"),
-
        body('phone')
        .matches(/^\d{8}$/)
         .withMessage("the phone must contain 8 numbers")
       ];
 
+
     return errors;
 }
 const userLoginValidator = (req, res, next) => {
-    const errors = [  body('email').isEmail().withMessage("l'email est invalide"),
+    const errors = [  
+    body('email').notEmpty().withMessage('email is requierd')
+                 .isEmail().withMessage("mail est invalid"),
     body('password')
+          .notEmpty()
+          .withMessage('password is required')
           .isLength({min: 6, max: 100})
           .withMessage('the password must contain al least 6 characters')
           .matches(/\d/)
