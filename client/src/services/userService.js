@@ -8,9 +8,7 @@ const register = async(userData,  thunkAPI) => {
       }
       return response.data;
     } catch (error) {
-        const errors = error.response && error.response.data.errors;
-        console.log(errors);
-        
+        const errors = error.response && error.response.data.errors;        
         return thunkAPI.rejectWithValue(errors);
     }
 }

@@ -10,10 +10,11 @@ import { login, logout } from '../features/authSlice';
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {errors} = useSelector(state => state.auth);
+  const { errors = [], isAuth } = useSelector(state => state.auth || {});
 
   useEffect(() => {
     dispatch(logout());
+    
   }, []);
   
   const [form, setForm] = useState({
@@ -30,12 +31,16 @@ const Login = () => {
         [name]: value
        }));
   }
-  const handleSubmit = (e) => {
-     e.preventDefault();
-     dispatch(login(form));
-    console.log(errors);
-    
-     navigate('/');
+
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(login(form)).unwrap();
+      navigate('/');
+    } catch (err) {
+      // Pas besoin de gérer ici, les erreurs sont déjà stockées dans Redux
+      console.error('Login failed:', err);
+    }
   }
   return (
     <main className='flex-1 container px-4 py-8 text-center mx-auto'>
