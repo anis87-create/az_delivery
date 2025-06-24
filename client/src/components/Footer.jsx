@@ -6,7 +6,7 @@ const Footer = () => {
   const hideAuth = ['/login','/register'].includes(location.pathname);
   return (
     !hideAuth && 
-   (<div className='bg-black py-3 text-white'>
+   (<div className='bg-black py-3 text-white fixed bottom-0 left-0 w-full z-50'>
       <div className='container'>  
        <div className='flex justify-between items-center'>
          <span>© 2025 FoodDelivery. All rights reserved.</span>

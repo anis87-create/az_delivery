@@ -75,15 +75,16 @@ const Header = () => {
               <MdOutlineTask  size={20}  />  
               <span className='hidden sm:inline' style={{marginLeft: '10px'}}>Orders</span>
              </div>
+
              <div className='flex items-center p-3'>
-               <span>{user.fullName}</span>
-              <div className="w-10 h-10 bg-gray-200 flex items-center justify-center rounded-full p-3" style={{marginLeft:'10px'}}>
-                
-                <span className="text-gray-700  text-lg">
-                  {getInitials(user.fullName)}
-                </span>
-              </div>
-          
+                <span>{user.fullName}</span>
+                <Link to="/profile/edit">
+                  <div className="w-10 h-10 bg-gray-200 flex items-center justify-center rounded-full p-3 cursor-pointer" style={{marginLeft:'10px'}}>
+                    <span className="text-gray-700  text-lg">
+                      {getInitials(user.fullName)}
+                    </span>
+                  </div>
+                </Link>
              </div>
           </nav>
           )
